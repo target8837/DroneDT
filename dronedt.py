@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
+cnt = 0
 
 class MyViz( QWidget ):
     # 생성자를 통해 frame, button 등의 레이아웃을 추가한다.
@@ -53,74 +54,126 @@ class MyViz( QWidget ):
         #b_layout = QHBoxLayout()
         layout = QVBoxLayout()
         layout.addWidget( self.frame )
-        
-        h_layout = QHBoxLayout()
 
+        #layout.addLayout(t_layout)
 
-        left_button = QPushButton( "Battery" )
-        left_button.clicked.connect( self.onLeftButtonClick )
-        h_layout.addWidget( left_button )
-        
-        center_button = QPushButton( "Orientation" )
-        center_button.clicked.connect( self.onCenterButtonClick )
-        h_layout.addWidget( center_button )
-
-        right_button = QPushButton( "Position" )
-        right_button.clicked.connect( self.onRightButtonClick )
-        h_layout.addWidget( right_button )
-
-        
-        #layout.addLayout( h_layout )
-        
-        t_layout = QHBoxLayout()
-        self.tablewidget = QTableWidget(self)
-        self.tablewidget.resize(200, 400)
-        self.tablewidget.setRowCount(3) # 행 개수
-        self.tablewidget.setColumnCount(1) # 열 개수
-        for i in range(0,3):
-            self.tablewidget.setRowHeight(i, self.tablewidget.height() / 3)
-        self.tablewidget.setColumnWidth(0,self.tablewidget.width())
-        #self.tablewidget.setColumnWidth(1,self.tablewidget.width()/2)
-
-        self.tablewidget.setHorizontalHeaderLabels(['POSITION'])
-        self.tablewidget.setVerticalHeaderLabels(['X','Y','Z'])
-        for i in range(0, 3):
-            for j in range(0, 1):
-                self.tablewidget.setItem(i, j, QTableWidgetItem())
-                self.tablewidget.item(i, j).setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-
-        t_layout.addWidget(self.tablewidget)
-
-        self.tablewidget2 = QTableWidget(self)
-        self.tablewidget2.resize(200, 400)
-        self.tablewidget2.setRowCount(4) # 행 개수
-        self.tablewidget2.setColumnCount(1) # 열 개수
-        for i in range(0,4):
-            self.tablewidget2.setRowHeight(i, self.tablewidget2.height() / 4)
-        self.tablewidget2.setColumnWidth(0,self.tablewidget.width())
-        #self.tablewidget.setColumnWidth(1,self.tablewidget.width()/2)
-
-        self.tablewidget2.setHorizontalHeaderLabels(['ORIENTATION'])
-        self.tablewidget2.setVerticalHeaderLabels(['X','Y','Z','W'])
-        for i in range(0, 4):
-            for j in range(0, 1):
-                self.tablewidget2.setItem(i, j, QTableWidgetItem())
-                self.tablewidget2.item(i, j).setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-
-        t_layout.addWidget(self.tablewidget2)
-
-        layout.addLayout(t_layout)
-
+        po_layout = QHBoxLayout()
+        ho0_layout = QHBoxLayout()
+        ho1_layout = QVBoxLayout()
+        ho2_layout = QVBoxLayout()
+        ho1x_layout = QHBoxLayout()
+        ho2x_layout = QHBoxLayout()
+        ho1y_layout = QHBoxLayout()
+        ho2y_layout = QHBoxLayout()
+        ho1z_layout = QHBoxLayout()
+        ho2z_layout = QHBoxLayout()
+        ho2w_layout = QHBoxLayout()
         #b_layout.addLayout(layout)
         #layout.addWidget(self.tablewidget)
 
         #self.setLayout(b_layout)
 
+        self.position = QLabel()
+        self.position.setText("POSITION")
+        self.position.setFont(QFont("Times", 15, QFont.Bold))
+        self.orientation = QLabel()
+        self.orientation.setText("ORIENTATION")
+        self.orientation.setFont(QFont("Times", 15, QFont.Bold))
+        ho0_layout.addWidget(self.position)
+        ho0_layout.addWidget(self.orientation)
+        layout.addLayout(ho0_layout)
+
+        self.label_px = QLabel()
+        self.px = QLabel()
+        self.px.setText("X")
+        #self.px.setAlignment(Qt.AlignCenter)
+        self.px.setFont(QFont('Arial', 12, QFont.Bold))
+        ho1x_layout.addWidget(self.px)
+        ho1x_layout.addWidget(self.label_px)
+        self.empty_px = QLabel()
+        ho1x_layout.addWidget(self.empty_px)
+        ho1_layout.addLayout(ho1x_layout)
+
+        self.label_py = QLabel()
+        self.py = QLabel()
+        self.py.setText("Y")
+        #self.py.setAlignment(Qt.AlignCenter)
+        self.py.setFont(QFont('Arial', 12, QFont.Bold))
+        ho1y_layout.addWidget(self.py)
+        ho1y_layout.addWidget(self.label_py)
+        self.empty_py = QLabel()
+        ho1y_layout.addWidget(self.empty_py)
+        ho1_layout.addLayout(ho1y_layout)
+
+        self.label_pz = QLabel()
+        self.pz = QLabel()
+        self.pz.setText("Z")
+        #self.pz.setAlignment(Qt.AlignCenter)
+        self.pz.setFont(QFont('Arial', 12, QFont.Bold))
+        ho1z_layout.addWidget(self.pz)
+        ho1z_layout.addWidget(self.label_pz)
+        self.empty_pz = QLabel()
+        ho1z_layout.addWidget(self.empty_pz)
+        ho1_layout.addLayout(ho1z_layout)
+
+        po_layout.addLayout(ho1_layout)
+
+        self.label_ox = QLabel()
+        self.ox = QLabel()
+        self.ox.setText("X")
+        #self.ox.setAlignment(Qt.AlignCenter)
+        self.ox.setFont(QFont('Arial', 12, QFont.Bold))
+        ho2x_layout.addWidget(self.ox)
+        ho2x_layout.addWidget(self.label_ox)
+        self.empty_ox = QLabel()
+        ho2x_layout.addWidget(self.empty_ox)
+        ho2_layout.addLayout(ho2x_layout)
+
+        self.label_oy = QLabel()
+        self.oy = QLabel()
+        self.oy.setText("Y")
+        #self.oy.setAlignment(Qt.AlignCenter)
+        self.oy.setFont(QFont('Arial', 12, QFont.Bold))
+        ho2y_layout.addWidget(self.oy)
+        ho2y_layout.addWidget(self.label_oy)
+        self.empty_oy = QLabel()
+        ho2y_layout.addWidget(self.empty_oy)
+        ho2_layout.addLayout(ho2y_layout)
+
+        self.label_oz = QLabel()
+        self.oz = QLabel()
+        self.oz.setText("Z")
+        #self.oz.setAlignment(Qt.AlignCenter)
+        self.oz.setFont(QFont('Arial', 12, QFont.Bold))
+        ho2z_layout.addWidget(self.oz)
+        ho2z_layout.addWidget(self.label_oz)
+        self.empty_oz = QLabel()
+        ho2z_layout.addWidget(self.empty_oz)
+        ho2_layout.addLayout(ho2z_layout)
+
+        self.label_ow = QLabel()
+        self.ow = QLabel()
+        self.ow.setText("W")
+        #self.ow.setAlignment(Qt.AlignCenter)
+        self.ow.setFont(QFont('Arial', 12, QFont.Bold))
+        ho2w_layout.addWidget(self.ow)
+        ho2w_layout.addWidget(self.label_ow)
+        self.empty_ow = QLabel()
+        ho2w_layout.addWidget(self.empty_ow)
+        ho2_layout.addLayout(ho2w_layout)
+        
+        po_layout.addLayout(ho2_layout)
+        layout.addLayout(po_layout)
+        self.setLayout(layout)
+
+        self.batterylabel = QLabel()
+        self.batterylabel.setText("Battery")
+
+        self.empty = QLabel()
         self.pbar = QProgressBar(self)
         #self.pbar.setGeometry()
+        layout.addWidget(self.empty)
         layout.addWidget(self.pbar)
-        
-        self.setLayout(layout)
 
     def batt_callback(self, msg):
         #self.tablewidget.item(0, 1).setText(str(msg.percentage*100)+"%")
@@ -128,23 +181,21 @@ class MyViz( QWidget ):
         print("battery check")
 
     def pos_callback(self, msg):
-        self.tablewidget.item(0, 0).setText(str(msg.pose.position.x))
-        self.tablewidget.item(1, 0).setText(str(msg.pose.position.y))
-        self.tablewidget.item(2, 0).setText(str(msg.pose.position.z))
-        self.tablewidget2.item(0, 0).setText(str(msg.pose.orientation.x))
-        self.tablewidget2.item(1, 0).setText(str(msg.pose.orientation.y))
-        self.tablewidget2.item(2, 0).setText(str(msg.pose.orientation.z))
-        self.tablewidget2.item(3, 0).setText(str(msg.pose.orientation.w))
-        print("position receive")
+        #label.setText(str(msg.pose.orientation.w))
+        self.label_px.setText(str(msg.pose.position.x))
+        self.label_py.setText(str(msg.pose.position.y))
+        self.label_pz.setText(str(msg.pose.position.z))
 
-    
-        
+        self.label_ox.setText(str(msg.pose.orientation.x))
+        self.label_oy.setText(str(msg.pose.orientation.y))
+        self.label_oz.setText(str(msg.pose.orientation.z))
+        self.label_ow.setText(str(msg.pose.orientation.w))
+        print("position receive")
 
     def onLeftButtonClick( self ):
         if self.grid_display != None:
             self.grid_display.subProp( "Marker Topic" ).setValue("/group_localization")
 
-        
     def onCenterButtonClick( self ):
         if self.grid_display != None:
             self.grid_display.subProp( "Marker Topic" ).setValue("/fire")
